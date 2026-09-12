@@ -46,10 +46,6 @@ if __name__ == '__main__':
     # host='0.0.0.0' に設定しないと外部（スマホなど）からアクセスできません
     app.run(host='0.0.0.0', port=port)
 
-# .env に FLASK_SECRET_KEY が設定されていればそれを使い、
-# 未設定（または空欄）なら起動ごとに32バイトのランダム文字列を自動生成する
-app.secret_key = os.environ.get("FLASK_SECRET_KEY") or secrets.token_hex(32)
-
 # =====================
 # プロキシ設定（全通信共通）
 # =====================
