@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <title>AUTOCAT JP Chat</title>
+  <title>AUTOCAT2 JP Chat</title>
   <style>
     @font-face{font-family:Kogoe;src:url('/static/fonts/Kogoe-Light.ttf') format('truetype');font-display:swap}
     :root{--bg:#090b11;--surface:#11151f;--surface2:#171c28;--line:#263044;--text:#edf4ff;--muted:#8d9bb0;--blue:#38bdf8;--blue2:#7dd3fc;--red:#fb7185;--green:#4ade80;--shadow:0 20px 55px rgba(0,0,0,.4)}
@@ -24,7 +24,7 @@
 <div class="app">
   <header>
     <a class="btn" href="{{ '/vip' if user and user.is_vip else '/' }}">← 戻る</a>
-    <div class="brand">AUTOCAT <span>JP CHAT</span></div>
+    <div class="brand">AUTOCAT2 <span>JP CHAT</span></div>
     <div class="spacer"></div>
     <div id="identity" class="identity">接続中...</div>
     {% if is_chat_admin %}<a class="btn" href="/chat/admin">管理</a>{% endif %}
