@@ -21,7 +21,13 @@
 <body>
 <main>
   <section class="card">
-    <div class="head"><h1>管理パネル</h1><div class="spacer"></div><a class="link" href="/admin/vip">VIP管理を開く</a><a class="link" href="/chat/admin">チャット管理</a></div>
+    <div class="head">
+      <h1>管理パネル</h1>
+      <div class="spacer"></div>
+      <a class="link" href="/">トップへ戻る</a>
+      <a class="link" href="/admin/vip">VIP管理を開く</a>
+      <a class="link" href="/chat/admin">チャット管理</a>
+    </div>
     <p>IDを入力してください。</p>
     <form action="/admin/panel" method="get">
       <input name="id" value="{{ operation_id }}" maxlength="30" pattern="[A-Za-z0-9]{30}" autocomplete="off" placeholder="ID" required>
