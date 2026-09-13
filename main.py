@@ -39,11 +39,6 @@ from free_usage import (
 )
 
 load_dotenv()
-@app.route('/logs')
-def logs_page():
-    # 例としてログのリストを渡す場合
-    log_data = "サーバーは正常に稼働しています。"
-    return render_template('logs.html', logs=log_data)
 
 if __name__ == '__main__':
     # os.environ.get('PORT') でサーバー側が割り当てるポート番号を取得する
