@@ -292,15 +292,7 @@ TARGET_GAME_VERSION = core.GameVersion(TARGET_GAME_VERSION_NUMBER)
 BCSFE_EDIT_LOCK = threading.RLock()
 
 app = Flask(__name__, template_folder="HTML")
-@app.route('/logs')
-def logs_page():
-    log_data = "サーバーは正常に稼働しています。"
-    return render_template('logs.html', logs=log_data)
-if __name__ == '__main__':
-    # os.environ.get('PORT') でサーバー側が割り当てるポート番号を取得する
-    port = int(os.environ.get('PORT', 5000))
-    # host='0.0.0.0' に設定しないと外部（スマホなど）からアクセスできません
-    app.run(host='0.0.0.0', port=port)
+
 app.secret_key = os.getenv("FLASK_SECRET_KEY", os.urandom(32))
 # VIPのイベント詳細は、全選択時に数千ステージ分の指定を送る。
 # 64KBでは正常な操作でも413になるため、既存機能が収まる上限へ更新する。
