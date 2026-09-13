@@ -3,139 +3,198 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>autocat.jp Admin</title>
+  <title>autocat.jp - システムログ</title>
   <style>
-    :root{color-scheme:dark;--bg:#101017;--card:#191923;--border:#303041;--accent:#79cfff;--text:#f5f5fa;--muted:#a5a5b5;--error:#ff7185;--ok:#65d69a}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif}
-    main{width:min(920px,calc(100% - 28px));margin:38px auto}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px}
-    h1,h2{margin:0 0 18px}p{color:var(--muted);line-height:1.7}form{display:flex;gap:10px;flex-wrap:wrap}
-    input{flex:1;min-width:250px;background:#101018;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:13px;font:inherit}
-    button{border:0;border-radius:10px;padding:13px 18px;background:var(--accent);color:#071018;font-weight:800;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}
-    dl{display:grid;grid-template-columns:150px 1fr;gap:10px;margin:0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}.error{color:var(--error)}.ok{color:var(--ok)}code{font-family:ui-monospace,monospace;color:var(--accent)}
-    .codes{background:#101018;border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:14px;display:none}
-    .head{display:flex;align-items:center;gap:10px}.head h1{margin:0}.spacer{flex:1}.link{display:inline-flex;padding:9px 13px;border:1px solid var(--border);border-radius:9px;color:var(--text);text-decoration:none;font-size:12px;font-weight:800}.link:hover{border-color:var(--accent)}
-    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:13px 0}.summary div{padding:13px;border:1px solid var(--border);border-radius:10px;background:#101018}.summary span{display:block;color:var(--muted);font-size:10px}.summary strong{display:block;margin-top:3px;font-size:23px}.vip-list{display:grid;gap:7px;margin-top:12px}.vip-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px;border-bottom:1px solid var(--border)}.vip-row:last-child{border:0}.vip-row code{display:block;margin-top:3px}.vip-row small{color:var(--muted)}
+    :root {
+      color-scheme: dark;
+      --bg: #101017;
+      --card: #191923;
+      --border: #303041;
+      --accent: #79cfff;
+      --text: #f5f5fa;
+      --muted: #a5a5b5;
+      --error: #ff7185;
+      --ok: #65d69a;
+      --warn: #ffd166;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    main {
+      width: min(920px, calc(100% - 28px));
+      margin: 38px auto;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    h1 { margin: 0; font-size: 24px; }
+    p { color: var(--muted); line-height: 1.7; margin: 0 0 12px; }
+    .head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .spacer { flex: 1; }
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .link {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 800;
+      background: transparent;
+      cursor: pointer;
+    }
+    .link:hover { border-color: var(--accent); }
+    .btn-action {
+      border: 0;
+      border-radius: 9px;
+      padding: 9px 13px;
+      background: var(--accent);
+      color: #071018;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-action:hover { opacity: 0.9; }
     
-    /* ログ表示用スタイル */
-    .log-box{background:#101018;border:1px solid var(--border);border-radius:10px;padding:14px;height:320px;overflow-y:auto;font-family:ui-monospace,monospace;font-size:13px;line-height:1.6}
-    .log-entry{margin:0 0 6px;word-break:break-all}.log-time{color:var(--muted);margin-right:8px}
-    
-    @media(max-width:520px){main{margin:18px auto}.card{padding:18px}dl{grid-template-columns:1fr;gap:5px}dd{margin-bottom:8px}.head{align-items:flex-start;flex-wrap:wrap}.summary{grid-template-columns:1fr 1fr}.summary div:last-child{grid-column:1/-1}}
+    /* トグルスイッチ */
+    .switch-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+    .switch-label input { cursor: pointer; }
+
+    /* ログコンソールエリア */
+    .console-box {
+      background: #101018;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      height: 60vh;
+      min-height: 400px;
+      overflow-y: auto;
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .log-line {
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(48, 48, 65, 0.4);
+    }
+    .log-line:last-child { border-bottom: 0; }
+    .log-info { color: var(--text); }
+    .log-ok { color: var(--ok); }
+    .log-warn { color: var(--warn); }
+    .log-error { color: var(--error); }
+
+    @media(max-width: 520px) {
+      main { margin: 18px auto; }
+      .card { padding: 18px; }
+      .head { align-items: flex-start; flex-wrap: wrap; }
+      .controls { width: 100%; justify-content: flex-start; }
+    }
   </style>
 </head>
 <body>
 <main>
   <section class="card">
     <div class="head">
-      <h1>管理パネル</h1>
+      <h1>リアルタイムシステムログ</h1>
       <div class="spacer"></div>
-      <a class="link" href="/admin/vip">VIP管理</a>
-      <a class="link" href="/chat/admin">チャット管理</a>
+      <a class="link" href="/admin">管理パネルへ戻る</a>
     </div>
-    <form action="/admin/panel" method="get" style="margin-top:14px;">
-      <input name="id" value="{{ operation_id }}" maxlength="30" pattern="[A-Za-z0-9]{30}" autocomplete="off" placeholder="IDを入力" required>
-      <button type="submit">検索</button>
-    </form>
-    {% if search_error %}<p class="error">{{ search_error }}</p>{% endif %}
-  </section>
 
-  <section class="card">
-    <div class="head">
-      <h2>代行処理ログ</h2>
+    <div class="controls" style="margin-bottom: 16px;">
+      <label class="switch-label">
+        <input type="checkbox" id="autoScroll" checked> 自動スクロール
+      </label>
       <div class="spacer"></div>
-      <span class="ok" style="font-size:12px;">● 監視中</span>
+      <button class="link" onclick="fetchLogs()">🔄 手動更新</button>
+      <button class="link" onclick="clearConsole()">🧹 クリア</button>
     </div>
-    <div id="log-box" class="log-box">
-      <p class="log-entry"><span class="log-time">[システム]</span>ログ取得を開始しました...</p>
-    </div>
-  </section>
 
-  <section class="card">
-    <div class="head"><h2>VIP契約</h2><div class="spacer"></div><a class="link" href="/admin/vip">申請DM・付与管理 →</a></div>
-    <div class="summary"><div><span>サイトアカウント</span><strong>{{ vip_overview.summary.accounts }}</strong></div><div><span>VIP契約中</span><strong>{{ vip_overview.summary.active_vip }}</strong></div><div><span>対応待ち申請</span><strong>{{ vip_overview.summary.pending }}</strong></div></div>
-    <div class="vip-list">
-      {% for subscriber in vip_overview.subscribers[:10] %}
-      <div class="vip-row"><div><strong>{{ subscriber.username }}</strong><code>{{ subscriber.public_id }}</code></div><small>{% if subscriber.vip_expires_at %}<span data-vip-time="{{ subscriber.vip_expires_at }}"></span>まで{% else %}無期限{% endif %}</small></div>
-      {% else %}<p>VIP契約者はまだいません。</p>{% endfor %}
+    <div id="console" class="console-box">
+      <div class="log-line log-info">[SYSTEM] ログコンソールを初期化しました。データの取得を開始します...</div>
     </div>
   </section>
-
-  {% if operation %}
-  <section class="card">
-    <h2>受付内容</h2>
-    <dl>
-      <dt>受付ID</dt><dd><code>{{ operation.operation_id }}</code></dd>
-      <dt>種類</dt><dd>{{ '代行' if operation.operation_type == 'daiko' else '複製' }}</dd>
-      <dt>状態</dt><dd id="status">{{ operation.status }}</dd>
-      <dt>復旧状態</dt><dd id="recovery-status">{{ operation.recovery_status }}</dd>
-      <dt>有効期限</dt><dd id="expires" data-time="{{ operation.expires_at }}"></dd>
-      <dt>エラー内容</dt><dd id="error" class="error">{{ operation.error or 'なし' }}</dd>
-    </dl>
-    <div id="codes" class="codes"></div>
-    <button id="reissue" type="button" style="margin-top:14px;" {% if not operation.can_reissue or operation.status != 'error' %}disabled{% endif %}>
-      引き継ぎコードを再発行
-    </button>
-    <p id="message"></p>
-  </section>
-  {% endif %}
 </main>
 
 <script>
-document.querySelectorAll('[data-vip-time]').forEach(el=>el.textContent=new Date(Number(el.dataset.vipTime)*1000).toLocaleString('ja-JP'));
+const consoleEl = document.getElementById('console');
+const autoScrollEl = document.getElementById('autoScroll');
 
-// 代行ログのリアルタイム自動読み込み（3秒おき）
-const logBox = document.getElementById('log-box');
 async function fetchLogs() {
   try {
     const res = await fetch('/api/admin/logs', { cache: 'no-store' });
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('ログの取得に失敗しました');
     const data = await res.json();
-    if (data.logs && Array.isArray(data.logs)) {
-      logBox.innerHTML = data.logs.map(log => `<p class="log-entry">${log}</p>`).join('');
-      logBox.scrollTop = logBox.scrollHeight;
+    
+    const logs = Array.isArray(data) ? data : (data.logs || []);
+    
+    if (logs.length > 0) {
+      consoleEl.innerHTML = '';
+      logs.forEach(log => appendLog(log));
     }
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    appendLog(`[ERROR] 通信エラー: ${err.message}`, 'error');
   }
 }
-setInterval(fetchLogs, 3000);
-fetchLogs();
-</script>
 
-{% if operation %}
-<script>
-const operationId={{ operation.operation_id|tojson }};
-const csrfToken={{ csrf_token|tojson }};
-const button=document.getElementById('reissue');
-const message=document.getElementById('message');
-const expires=document.getElementById('expires');
-if(expires) expires.textContent=new Date(Number(expires.dataset.time)*1000).toLocaleString('ja-JP');
-async function refresh(){
-  const res=await fetch(`/api/admin/operations/${operationId}`,{cache:'no-store'});
-  if(!res.ok)return;
-  const data=await res.json();
-  document.getElementById('status').textContent=data.status||'';
-  document.getElementById('recovery-status').textContent=data.recovery_status||'';
-  document.getElementById('error').textContent=data.error||'なし';
-  if(data.recovery_transfer_code){
-    const box=document.getElementById('codes'); box.style.display='block';
-    box.textContent=`引き継ぎコード: ${data.recovery_transfer_code} / 認証番号: ${data.recovery_auth_code||''}`;
-    button.disabled=true; message.textContent='再発行が完了しました。'; message.className='ok';
-  }else if(data.recovery_status==='issuing'){
-    message.textContent='再発行中です...'; setTimeout(refresh,2000);
-  }else if(data.recovery_status==='reissue_failed'){
-    button.disabled=false; message.textContent='再発行に失敗しました。'; message.className='error';
+function appendLog(text, levelOverride = null) {
+  const line = document.createElement('div');
+  line.className = 'log-line';
+
+  if (levelOverride === 'error' || text.includes('ERROR') || text.includes('全失敗') || text.includes('Failed')) {
+    line.classList.add('log-error');
+  } else if (text.includes('WARN') || text.includes('WARNING') || text.includes('注意')) {
+    line.classList.add('log-warn');
+  } else if (text.includes('SUCCESS') || text.includes('成功') || text.includes('完了') || text.includes('OK')) {
+    line.classList.add('log-ok');
+  } else {
+    line.classList.add('log-info');
+  }
+
+  line.textContent = text;
+  consoleEl.appendChild(line);
+
+  if (autoScrollEl.checked) {
+    consoleEl.scrollTop = consoleEl.scrollHeight;
   }
 }
-button?.addEventListener('click',async()=>{
-  if(!confirm('保存済みデータから新しい引き継ぎコードを発行しますか？'))return;
-  button.disabled=true; message.textContent='再発行を開始します...'; message.className='';
-  const res=await fetch(`/api/admin/operations/${operationId}/reissue`,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrfToken},body:'{}'});
-  const data=await res.json().catch(()=>({}));
-  if(!res.ok){message.textContent=data.error||'再発行を開始できませんでした。';message.className='error';return;}
-  setTimeout(refresh,1000);
-});
+
+function clearConsole() {
+  consoleEl.innerHTML = '<div class="log-line log-info">[SYSTEM] 画面表示をクリアしました。</div>';
+}
+
+// 初回読み込みと3秒ごとの自動更新
+fetchLogs();
+setInterval(fetchLogs, 3000);
 </script>
-{% endif %}
 </body>
 </html>
