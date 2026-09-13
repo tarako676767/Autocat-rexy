@@ -459,6 +459,7 @@
     {% if discord_user %}
     <a href="/chat" class="user-chip" style="text-decoration:none;">Discord: {{ discord_user.username }}</a>
     {% if discord_is_admin %}<a href="/admin/panel" class="btn btn-ghost">管理</a>{% endif %}
+　　　{% if discord_is_admin %}<a href="/logs" class="btn btn-primary">ログ</a>{% endif %}
     <a href="/auth/logout" class="btn btn-ghost">Discordログアウト</a>
     {% else %}
     <a href="/auth/login?next=/" class="btn btn-ghost">Discordログイン</a>
